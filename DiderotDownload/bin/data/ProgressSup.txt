@@ -1,0 +1,25 @@
+
+
+--------------------------------------- 2017-05-04-15-08-00-661
+[notice ] File saved successfully to: V13/V13PT1.jpeg
+[notice ] File saved successfully to: V13/V13PT2.jpeg
+[notice ] File saved successfully to: V13/V13PT3.jpeg
+[notice ] File saved successfully to: V13/V13PT4.jpeg
+[notice ] File saved successfully to: V13/V13PT5.jpeg
+[notice ] File saved successfully to: V13/V13PT6.jpeg
+[notice ] File saved successfully to: V13/V13PT7.jpeg
+[notice ] File saved successfully to: V13/V13PT8.jpeg
+[notice ] File saved successfully to: V13/V13PT9.jpeg
+[notice ] File saved successfully to: V13/V13PT10.jpeg
+[notice ] File saved successfully to: V13/V13PT11.jpeg
+[notice ] File saved successfully to: V13/V13PT12.jpeg
+[notice ] File saved successfully to: V13/V13PT13.jpeg
+[notice ] File saved successfully to: V13/V13PT14.jpeg
+[notice ] File saved successfully to: V13/V13PT15.jpeg
+[notice ] File saved successfully to: V13/V13PT16.jpeg
+[notice ] File saved successfully to: V13/V13PT17.jpeg
+[notice ] Error saving file from: http://artflsrv02.uchicago.edu/images/encyclopedie/V13/ENC_13-T18.jpeg
+[notice ] to: http://artflsrv02.uchicago.edu/images/encyclopedie/V13/ENC_13-T18.jpeg
+[notice ] Error: Not Found
+[notice ] This means there are 19 files in Volume 13
+[notice ] Download complete!
