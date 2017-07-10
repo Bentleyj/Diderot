@@ -2,33 +2,30 @@
 
 //--------------------------------------------------------------
 void DiderotApp::setup(){
-	int numImages = 3;
 
 	string settingsPath = "settings/settings.xml";
 	gui.setup("gui", settingsPath);
-	gui.add(index.set("Image Index", 0, 0, numImages-1));
 	gui.loadFromFile(settingsPath);
 
 	string imagesRoot = "../../DiderotData/";
 	ofSetDataPathRoot(imagesRoot);
 
 	cout << "Starting to load Paths: " << ofGetElapsedTimef() << endl;
-	vector<string> imagePaths = loader.load("", "jpeg");
+	imagePaths = loader.load("", "jpeg");
 	cout << "End Load Paths" << ofGetElapsedTimef() << endl;
 	cout << "We loaded " << imagePaths.size() << " images."<< endl;
 
-	if (numImages > imagePaths.size())
-		numImages = imagePaths.size();
+	images.resize(3);
 
-	cout << "Starting to load " << numImages << " images at " <<ofGetElapsedTimef() << " seconds from the start of the app." << endl;
-
-	for (int i = 0; i < numImages; i++) {
-		ofImage img;
-		img.load(imagePaths[i]);
-		images.push_back(img);
+	for (int i = 0; i < images.size(); i++) {
+		images[i] = new ofImage();
 	}
 
-	cout << "Finished loading " << numImages << " images at " << ofGetElapsedTimef() << " seconds from the start of the app." << endl;
+	images[0]->load(imagePaths[imagePaths.size() - 1]);
+	images[1]->load(imagePaths[0]);
+	images[2]->load(imagePaths[1]);
+
+	index = 1;
 
 	//ofSetRectMode(OF_RECTMODE_CENTER);
 
@@ -36,24 +33,35 @@ void DiderotApp::setup(){
 
 //--------------------------------------------------------------
 void DiderotApp::update(){
-
+	//stepRight();
 }
 
 //--------------------------------------------------------------
 void DiderotApp::draw(){
-	gui.draw();
-	ofTranslate(ofGetWidth() / 2 - images[index].getWidth() / 2, ofGetHeight() / 2 - images[index].getHeight() / 2);
-	images[index].draw(0, 0);
+/*	ofTranslate(ofGetWidth() / 2 - images[1]->getWidth() / 2, ofGetHeight() / 2 - images[1]->getHeight() / 2);
+	images[1]->draw(0, 0)*/;
 }
 
 //--------------------------------------------------------------
 void DiderotApp::stepLeft() {
+	images[2] = images[1];
+	images[1] = images[0];
+	int indexToLoad = (index - 2) % imagePaths.size();
+	//cout << indexToLoad << ": " << imagePaths[indexToLoad] << endl;
+	images[0]->load(imagePaths[indexToLoad]);
 	index--;
+	index %= imagePaths.size();
 }
 
 //--------------------------------------------------------------
 void DiderotApp::stepRight() {
-
+	images[0] = images[1];
+	images[1] = images[2];
+	int indexToLoad = (index + 2) % imagePaths.size();
+	//cout << indexToLoad << ": " << imagePaths[indexToLoad] << endl;
+	images[2]->load(imagePaths[indexToLoad]);
+	index++;
+	index %= imagePaths.size();
 }
 
 //--------------------------------------------------------------

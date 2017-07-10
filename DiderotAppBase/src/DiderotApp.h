@@ -26,9 +26,10 @@ class DiderotApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		vector<string> imageNames;
+		vector<string> imagePaths;
 		vector<ofImage*> images;
 		ofxNestedFileLoader loader;
+		int index;
 
 		ofxPanel gui;
 		
