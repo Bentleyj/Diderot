@@ -7,6 +7,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+    DiderotApp::setup();
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	
 	// enable depth->video image calibration
@@ -102,7 +103,7 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	
+    DiderotApp::draw();
 	ofSetColor(255, 255, 255);
 	
 	if(bDrawPointCloud) {
@@ -188,6 +189,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed (int key) {
+    DiderotApp::keyPressed(key);
 	switch (key) {
 		case ' ':
 			bThreshWithOpenCV = !bThreshWithOpenCV;

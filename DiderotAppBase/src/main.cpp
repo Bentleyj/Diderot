@@ -1,5 +1,5 @@
 #include "ofMain.h"
-#include "DiderotApp.h"
+#include "ofxDiderot.h"
 
 //========================================================================
 int main( ){

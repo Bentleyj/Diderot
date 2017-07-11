@@ -1,4 +1,4 @@
-#include "DiderotApp.h"
+#include "ofxDiderot.h"
 
 //--------------------------------------------------------------
 void DiderotApp::setup(){
@@ -6,13 +6,13 @@ void DiderotApp::setup(){
 	string settingsPath = "settings/settings.xml";
 	gui.setup("gui", settingsPath);
 	gui.loadFromFile(settingsPath);
-
-	string imagesRoot = "../../DiderotData/";
-	ofSetDataPathRoot(imagesRoot);
+    
+	string imagesRoot = "../../../DiderotData/";
+	//ofSetDataPathRoot(imagesRoot);
 
 	cout << "Starting to load Paths: " << ofGetElapsedTimef() << endl;
-	imagePaths = loader.load("", "jpeg");
-	cout << "End Load Paths" << ofGetElapsedTimef() << endl;
+	imagePaths = loader.load(imagesRoot);
+	cout << "End Load Paths " << ofGetElapsedTimef() << endl;
 	cout << "We loaded " << imagePaths.size() << " images."<< endl;
 
 	images.resize(3);
@@ -20,12 +20,15 @@ void DiderotApp::setup(){
 	for (int i = 0; i < images.size(); i++) {
 		images[i] = new ofImage();
 	}
+    if(imagePaths.size() > 0) {
+        
+        images[0]->load(imagePaths[imagePaths.size() - 1]);
+        images[1]->load(imagePaths[0]);
+        images[2]->load(imagePaths[1]);
+        
+        index = 1;
+    }
 
-	images[0]->load(imagePaths[imagePaths.size() - 1]);
-	images[1]->load(imagePaths[0]);
-	images[2]->load(imagePaths[1]);
-
-	index = 1;
 
 	//ofSetRectMode(OF_RECTMODE_CENTER);
 
@@ -38,8 +41,8 @@ void DiderotApp::update(){
 
 //--------------------------------------------------------------
 void DiderotApp::draw(){
-/*	ofTranslate(ofGetWidth() / 2 - images[1]->getWidth() / 2, ofGetHeight() / 2 - images[1]->getHeight() / 2);
-	images[1]->draw(0, 0)*/;
+	ofTranslate(ofGetWidth() / 2 - images[1]->getWidth() / 2, ofGetHeight() / 2 - images[1]->getHeight() / 2);
+	images[1]->draw(0, 0);
 }
 
 //--------------------------------------------------------------
