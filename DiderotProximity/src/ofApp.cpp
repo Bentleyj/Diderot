@@ -33,125 +33,51 @@ void ofApp::setup() {
 	kinect2.init();
 	kinect2.open();
 #endif
+    
+    string settingsPath = "settings/settings.xml";
 	
-	colorImg.allocate(kinect.width, kinect.height);
-	grayImage.allocate(kinect.width, kinect.height);
-	grayThreshNear.allocate(kinect.width, kinect.height);
-	grayThreshFar.allocate(kinect.width, kinect.height);
-	
-	nearThreshold = 230;
-	farThreshold = 70;
-	bThreshWithOpenCV = true;
+    gui.setup("Controls", settingsPath);
+    gui.add(minDepthStepToTriggerNewPage.set("Page Step", 0.5, 0.0001, 2));
+    gui.loadFromFile(settingsPath);
+
+//    gui.add(nearThreshold.set("Near Thresh", 230, 0, 400));
+//    gui.add(farThreshold.set("Far Thresh", 70, 0, 400));
 	
 	ofSetFrameRate(60);
-	
-	// zero the tilt on startup
-	angle = 0;
-	kinect.setCameraTiltAngle(angle);
-	
-	// start from the front
-	bDrawPointCloud = false;
-}
+
+    depthFinder.setup(kinect.width, kinect.height);
+    }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+    float diff = depthFinder.getCurrentAverageDepth() - depthFinder.getRunningAverageDepth();
+    if(abs(diff) > minDepthStepToTriggerNewPage) {
+        if(diff > 0) {
+            stepLeft();
+        } else {
+            stepRight();
+        }
+    }
+        
+    depthFinder.updateAverageDepth(&kinect);
 	
 	ofBackground(100, 100, 100);
 	
 	kinect.update();
-	
-	// there is a new frame and we are connected
-	if(kinect.isFrameNew()) {
-		
-		// load grayscale depth image from the kinect source
-		grayImage.setFromPixels(kinect.getDepthPixels());
-		
-		// we do two thresholds - one for the far plane and one for the near plane
-		// we then do a cvAnd to get the pixels which are a union of the two thresholds
-		if(bThreshWithOpenCV) {
-			grayThreshNear = grayImage;
-			grayThreshFar = grayImage;
-			grayThreshNear.threshold(nearThreshold, true);
-			grayThreshFar.threshold(farThreshold);
-			cvAnd(grayThreshNear.getCvImage(), grayThreshFar.getCvImage(), grayImage.getCvImage(), NULL);
-		} else {
-			
-			// or we do it ourselves - show people how they can work with the pixels
-			ofPixels & pix = grayImage.getPixels();
-			int numPixels = pix.size();
-			for(int i = 0; i < numPixels; i++) {
-				if(pix[i] < nearThreshold && pix[i] > farThreshold) {
-					pix[i] = 255;
-				} else {
-					pix[i] = 0;
-				}
-			}
-		}
-		
-		// update the cv images
-		grayImage.flagImageChanged();
-		
-		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
-		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
-	}
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.update();
-#endif
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
     DiderotApp::draw();
-	ofSetColor(255, 255, 255);
-	
-	if(bDrawPointCloud) {
-		easyCam.begin();
-		drawPointCloud();
-		easyCam.end();
-	} else {
-		// draw from the live kinect
-		kinect.drawDepth(10, 10, 400, 300);
-		kinect.draw(420, 10, 400, 300);
-		
-		grayImage.draw(10, 320, 400, 300);
-		contourFinder.draw(10, 320, 400, 300);
-		
-#ifdef USE_TWO_KINECTS
-		kinect2.draw(420, 320, 400, 300);
-#endif
-	}
-	
-	// draw instructions
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-        
-    if(kinect.hasAccelControl()) {
-        reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
-        << ofToString(kinect.getMksAccel().y, 2) << " / "
-        << ofToString(kinect.getMksAccel().z, 2) << endl;
-    } else {
-        reportStream << "Note: this is a newer Xbox Kinect or Kinect For Windows device," << endl
-		<< "motor / led / accel controls are not currently supported" << endl << endl;
-    }
-    
-	reportStream << "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
-	<< "using opencv threshold = " << bThreshWithOpenCV <<" (press spacebar)" << endl
-	<< "set near threshold " << nearThreshold << " (press: + -)" << endl
-	<< "set far threshold " << farThreshold << " (press: < >) num blobs found " << contourFinder.nBlobs
-	<< ", fps: " << ofGetFrameRate() << endl
-	<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl;
+    float width = depthFinder.image.getWidth();
+    float height = depthFinder.image.getHeight();
 
-    if(kinect.hasCamTiltControl()) {
-    	reportStream << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-        << "press 1-5 & 0 to change the led mode" << endl;
-    }
+    depthFinder.debugDraw(ofGetWidth() - width/2, ofGetHeight() - height/2, width/2, height/2);
     
-	ofDrawBitmapString(reportStream.str(), 20, 652);
-    
+    gui.draw();
 }
 
+//--------------------------------------------------------------
 void ofApp::drawPointCloud() {
 	int w = 640;
 	int h = 480;
@@ -181,98 +107,12 @@ void ofApp::drawPointCloud() {
 void ofApp::exit() {
 	kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.close();
-#endif
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed (int key) {
-    DiderotApp::keyPressed(key);
-	switch (key) {
-		case ' ':
-			bThreshWithOpenCV = !bThreshWithOpenCV;
-			break;
-			
-		case'p':
-			bDrawPointCloud = !bDrawPointCloud;
-			break;
-			
-		case '>':
-		case '.':
-			farThreshold ++;
-			if (farThreshold > 255) farThreshold = 255;
-			break;
-			
-		case '<':
-		case ',':
-			farThreshold --;
-			if (farThreshold < 0) farThreshold = 0;
-			break;
-			
-		case '+':
-		case '=':
-			nearThreshold ++;
-			if (nearThreshold > 255) nearThreshold = 255;
-			break;
-			
-		case '-':
-			nearThreshold --;
-			if (nearThreshold < 0) nearThreshold = 0;
-			break;
-			
-		case 'w':
-			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
-			break;
-			
-		case 'o':
-			kinect.setCameraTiltAngle(angle); // go back to prev tilt
-			kinect.open();
-			break;
-			
-		case 'c':
-			kinect.setCameraTiltAngle(0); // zero the tilt
-			kinect.close();
-			break;
-			
-		case '1':
-			kinect.setLed(ofxKinect::LED_GREEN);
-			break;
-			
-		case '2':
-			kinect.setLed(ofxKinect::LED_YELLOW);
-			break;
-			
-		case '3':
-			kinect.setLed(ofxKinect::LED_RED);
-			break;
-			
-		case '4':
-			kinect.setLed(ofxKinect::LED_BLINK_GREEN);
-			break;
-			
-		case '5':
-			kinect.setLed(ofxKinect::LED_BLINK_YELLOW_RED);
-			break;
-			
-		case '0':
-			kinect.setLed(ofxKinect::LED_OFF);
-			break;
-			
-		case OF_KEY_UP:
-			angle++;
-			if(angle>30) angle=30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-			
-		case OF_KEY_DOWN:
-			angle--;
-			if(angle<-30) angle=-30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-	}
-}
+//void ofApp::keyPressed (int key) {
+//    DiderotApp::keyPressed(key);
+//}
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)

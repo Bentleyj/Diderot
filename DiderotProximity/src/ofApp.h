@@ -4,6 +4,7 @@
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
 #include "ofxDiderot.h"
+#include "DepthFinder.h"
 
 // Windows users:
 // You MUST install the libfreenect kinect drivers in order to be able to use
@@ -20,8 +21,6 @@
 //
 // No way around the Windows driver dance, sorry.
 
-// uncomment this to read from two kinects simultaneously
-//#define USE_TWO_KINECTS
 
 class ofApp : public DiderotApp {
 public:
@@ -33,7 +32,7 @@ public:
 	
 	void drawPointCloud();
 	
-	void keyPressed(int key);
+	//void keyPressed(int key);
 	void mouseDragged(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
@@ -43,25 +42,12 @@ public:
 	
 	ofxKinect kinect;
 	
-#ifdef USE_TWO_KINECTS
-	ofxKinect kinect2;
-#endif
-	
-	ofxCvColorImage colorImg;
-	
-	ofxCvGrayscaleImage grayImage; // grayscale depth image
-	ofxCvGrayscaleImage grayThreshNear; // the near thresholded image
-	ofxCvGrayscaleImage grayThreshFar; // the far thresholded image
-	
-	ofxCvContourFinder contourFinder;
-	
-	bool bThreshWithOpenCV;
-	bool bDrawPointCloud;
-	
-	int nearThreshold;
-	int farThreshold;
-	
-	int angle;
+    ofxPanel gui;
+	ofParameter<int> nearThreshold;
+	ofParameter<int> farThreshold;
+    ofParameter<float> minDepthStepToTriggerNewPage;
+    	    
+    DepthFinder depthFinder;
 	
 	// used for viewing the point cloud
 	ofEasyCam easyCam;
