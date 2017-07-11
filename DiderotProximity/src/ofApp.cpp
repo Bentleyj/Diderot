@@ -37,7 +37,7 @@ void ofApp::setup() {
     string settingsPath = "settings/settings.xml";
 	
     gui.setup("Controls", settingsPath);
-    gui.add(minDepthStepToTriggerNewPage.set("Page Step", 0.5, 0.0001, 2));
+    gui.add(minDepthStepToTriggerNewPage.set("Page Step", 0.01, 0.0001, 2));
     gui.loadFromFile(settingsPath);
 
 //    gui.add(nearThreshold.set("Near Thresh", 230, 0, 400));
