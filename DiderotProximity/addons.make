@@ -1,0 +1,5 @@
+ofxDiderot
+ofxGui
+ofxKinect
+ofxNestedFileLoader
+ofxOpenCv
