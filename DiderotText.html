@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<script>
+			var url = "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=did;cc=did;rgn=main;view=text;idno=did2222.0000.804"
+			function httpGetAsync(theUrl, callback)
+			{
+			    var xmlHttp = new XMLHttpRequest();
+			    xmlHttp.onreadystatechange = function() { 
+			        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+			            callback(xmlHttp.responseText);
+			    }
+			    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+			    xmlHttp.send(null);
+			}
+			function print(val) {
+				console.log(val);
+			}
+
+			httpGetAsync(url, print);
+
+			console.log("Test")
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
