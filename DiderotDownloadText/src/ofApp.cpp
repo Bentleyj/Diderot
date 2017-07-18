@@ -11,10 +11,14 @@ void ofApp::setup(){
 	ofHttpResponse resp;
 	string s;
 
-	ofxXmlSettings settings;
+	ofxXmlSettings t;
+	t.addTag("Topics");
+	t.pushTag("Topics");
 
 	int p;
 	for (int i = 0; i < 9999; i++) {
+		t.addTag("Volume");
+		t.pushTag("Volume");
 		for (int j = 0; j < 999; j++) {
 			url = getURL(i, j);
 			resp = loader.get(url);
@@ -25,15 +29,26 @@ void ofApp::setup(){
 			}
 			else {
 				// We got a page!
-				int end = getTextPos(s, "</div>", p + 21);
-				int index = p + 21;
-				while (index < end) {
-					cout << s[index];
-					index++;
+				cout << "Found " + ofToString(i) + " " + ofToString(j) << endl;
+				int textEnd = getTextPos(s, "</div>", p + 21);
+				string text = s.substr(p + 21, textEnd - p - 21);
+				int posOfHTMLStart = 0;
+				int posOfHTMLEnd = 0;
+				posOfHTMLStart = getTextPos(text, "<", 0);
+				posOfHTMLEnd = getTextPos(text, ">", posOfHTMLStart);
+				cout << text << endl;
+				while (posOfHTMLStart != -1 && posOfHTMLEnd != -1) {
+					string firstPart = text.substr(0, posOfHTMLStart);
+					string secondPart = text.substr(posOfHTMLEnd+1, text.length());
+					text = firstPart + secondPart;
+					posOfHTMLStart = getTextPos(text, "<", 0);
+					posOfHTMLEnd = getTextPos(text, ">", posOfHTMLStart);
 				}
-
+				t.addValue("Topic", text);
+				t.saveFile("settings/text.xml");
 			}
 		}
+		t.popTag();
 	}
 }
 
@@ -81,7 +96,6 @@ string ofApp::pad3(int val) {
 //--------------------------------------------------------------
 string ofApp::getURL(int i1, int i2) {
 	string s = "https://quod.lib.umich.edu/cgi/t/text/text-idx?c=did;cc=did;rgn=main;view=text;idno=did2222." + pad4(i1) + "." + pad3(i2);
-	cout << s << endl;
 	return s;
 }
 
@@ -89,7 +103,7 @@ string ofApp::getURL(int i1, int i2) {
 int ofApp::getTextPos(string sIn, string sFor, int start = 0) {
 
 	int pos = sIn.find(sFor, start);
-
+	cout << "Found " << sFor << " at position: " << pos << endl;
 	return pos;
 }
 
