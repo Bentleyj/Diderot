@@ -10,6 +10,9 @@ class ofApp : public ofxDiderotApp{
 		void update();
 		void draw();
 
+		void exposureChanged(int & val);
+		void playingChanged(bool & val);
+
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -23,9 +26,15 @@ class ofApp : public ofxDiderotApp{
 		void gotMessage(ofMessage msg);
 
 		ofParameter<int> exposure;
+		ofParameter<bool> playing;
+		ofParameter<float> percent;
+
+		int timeOfLastStepMillis;
 
 		int numFiles;
 
-		float swapRate;
+		bool drawGui;
+
+		float fps;
 		
 };
