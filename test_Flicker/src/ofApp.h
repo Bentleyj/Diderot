@@ -31,6 +31,7 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<float> percent;
 		ofParameter<bool> negative;
 		ofParameter<float> scale;
+		ofParameter<bool> rotate;
 		vector<ofParameter<bool>> folders;
 
 		ofParameterGroup foldersGroup;

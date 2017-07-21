@@ -16,6 +16,7 @@ void ofApp::setup(){
 	gui.add(percent.set("Percent", 0, 0, 100));
 	gui.add(negative.set("Negative", false));
 	gui.add(scale.set("Scale", 1, 0.5, 10.0));
+	gui.add(rotate.set("Rotate 90", false));
 	// Do the Supplements
 	for (int i = 1; i < 6; i++) {
 		ofParameter<bool> p;
@@ -50,7 +51,6 @@ void ofApp::update(){
 	if (playing) {
 		playDuration += ofGetLastFrameTime();
 		if (index >= numFiles - 1) {
-			cout << "Time to stop playing!" << endl;
 			playing = false;
 			player.play();
 		}
@@ -67,10 +67,18 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofSetColor(0);
+	if (negative)
+		ofSetColor(0);
+	else
+		ofSetColor(255);
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	ofSetColor(255);
 	ofPushMatrix();
+	if (rotate) {
+		ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
+		ofRotateZ(90);
+		ofTranslate(-ofGetWidth() / 2, -ofGetHeight() / 2);
+	}
 	if (negative) {
 		negativeEffect.begin();
 		negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
