@@ -12,6 +12,7 @@ class ofApp : public ofxDiderotApp{
 
 		void exposureChanged(int & val);
 		void playingChanged(bool & val);
+		void onFolderChanged(ofAbstractParameter &p);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -28,13 +29,22 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<int> exposure;
 		ofParameter<bool> playing;
 		ofParameter<float> percent;
+		ofParameter<bool> negative;
+		vector<ofParameter<bool>> folders;
 
-		int timeOfLastStepMillis;
+		ofParameterGroup foldersGroup;
+
+		float playDuration;
+
+		ofSoundPlayer player;
+
+		float timeOfLastStep;
 
 		int numFiles;
 
 		bool drawGui;
 
 		float fps;
-		
+
+		ofShader negativeEffect;
 };
