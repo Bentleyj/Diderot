@@ -30,6 +30,7 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<bool> playing;
 		ofParameter<float> percent;
 		ofParameter<bool> negative;
+		ofParameter<float> scale;
 		vector<ofParameter<bool>> folders;
 
 		ofParameterGroup foldersGroup;

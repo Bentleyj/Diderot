@@ -15,6 +15,7 @@ void ofApp::setup(){
 	gui.add(playing.set("Playing", false));
 	gui.add(percent.set("Percent", 0, 0, 100));
 	gui.add(negative.set("Negative", false));
+	gui.add(scale.set("Scale", 1, 0.5, 10.0));
 	// Do the Supplements
 	for (int i = 1; i < 6; i++) {
 		ofParameter<bool> p;
@@ -72,11 +73,15 @@ void ofApp::draw(){
 	ofPushMatrix();
 	if (negative) {
 		negativeEffect.begin();
-		ofxDiderotApp::draw();
+		negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
+		negativeEffect.setUniform1f("scale", scale);
+		ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
+		image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 		negativeEffect.end();
 	}
 	else {
-		ofxDiderotApp::draw();
+		ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
+		image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 	}
 	ofPopMatrix();
 
