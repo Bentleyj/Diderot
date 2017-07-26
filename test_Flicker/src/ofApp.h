@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxDiderotApp.h"
+#include "ofxCv.h"
 
 class ofApp : public ofxDiderotApp{
 
@@ -32,6 +33,8 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<bool> negative;
 		ofParameter<float> scale;
 		ofParameter<bool> rotate;
+		ofParameter<bool> thresholdOn;
+		ofParameter<float> threshold;
 		vector<ofParameter<bool>> folders;
 
 		ofParameterGroup foldersGroup;

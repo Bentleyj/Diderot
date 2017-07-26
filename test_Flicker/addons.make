@@ -1,3 +1,5 @@
+ofxCv
 ofxDiderot
 ofxGui
 ofxNestedFileLoader
+ofxOpenCv

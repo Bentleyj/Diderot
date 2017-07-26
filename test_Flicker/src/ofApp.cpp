@@ -17,6 +17,8 @@ void ofApp::setup(){
 	gui.add(negative.set("Negative", false));
 	gui.add(scale.set("Scale", 1, 0.5, 10.0));
 	gui.add(rotate.set("Rotate 90", false));
+	gui.add(thresholdOn.set("ThreshOn", false));
+	gui.add(threshold.set("Threshold", 0.5, 0.0, 1.0));
 	// Do the Supplements
 	for (int i = 1; i < 6; i++) {
 		ofParameter<bool> p;
@@ -71,6 +73,7 @@ void ofApp::draw(){
 		ofSetColor(0);
 	else
 		ofSetColor(255);
+
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	ofSetColor(255);
 	ofPushMatrix();
@@ -79,18 +82,21 @@ void ofApp::draw(){
 		ofRotateZ(90);
 		ofTranslate(-ofGetWidth() / 2, -ofGetHeight() / 2);
 	}
-	if (negative) {
+	//if (negative) {
 		negativeEffect.begin();
 		negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
+		negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
 		negativeEffect.setUniform1f("scale", scale);
+		negativeEffect.setUniform1f("thresh", threshold);
 		ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
-		image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
+		ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
+		//image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 		negativeEffect.end();
-	}
-	else {
-		ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
-		image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-	}
+	//}
+	//else {
+		//ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
+		//image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
+	//}
 	ofPopMatrix();
 
 	if (drawGui) {
@@ -107,7 +113,6 @@ void ofApp::draw(){
 		ofDrawBitmapStringHighlight("Time Between Swaps: " + ofToString((1.0 / fps * 1000.0)), x, y);
 		y += 20;
 	}
-
 }
 
 //--------------------------------------------------------------
@@ -197,7 +202,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+	//buffer.allocate(w, h);
 }
 
 //--------------------------------------------------------------
