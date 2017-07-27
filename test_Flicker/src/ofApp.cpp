@@ -13,6 +13,7 @@ void ofApp::setup(){
 	fps = numFiles / exposure;
 
 	ofSetBackgroundAuto(false);
+    ofSetVerticalSync(false);
 
 	timeOfLastStep = ofGetElapsedTimef();
 
@@ -49,6 +50,8 @@ void ofApp::setupGui() {
 	exposure.addListener(this, &ofApp::exposureChanged);
 	playing.addListener(this, &ofApp::playingChanged);
 	ofAddListener(foldersGroup.parameterChangedE(), this, &ofApp::onFolderChanged);
+    
+    ofSetVerticalSync(false);
 
 }
 
@@ -97,6 +100,7 @@ void ofApp::draw(){
 	negativeEffect.end();
 	ofPopMatrix();
 	buff.end();
+    buff.draw(0, 0);
 }
 
 //--------------------------------------------------------------
