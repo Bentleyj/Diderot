@@ -5,7 +5,7 @@
 #include "ofxNestedFileLoader.h"
 #include "ofxGui.h"
 
-class DiderotApp : public ofBaseApp{
+class ofxDiderotApp : public ofBaseApp{
 
 	public:
 		void setup();
@@ -13,6 +13,7 @@ class DiderotApp : public ofBaseApp{
 		void draw();
 		void stepLeft();
 		void stepRight();
+		void loadImages(string path);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -27,7 +28,7 @@ class DiderotApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		vector<string> imagePaths;
-		vector<ofImage*> images;
+		ofImage image;
 		ofxNestedFileLoader loader;
 		int index;
 
