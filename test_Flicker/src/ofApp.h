@@ -8,8 +8,10 @@ class ofApp : public ofxDiderotApp{
 
 	public:
 		void setup();
+		void setupGui();
 		void update();
 		void draw();
+		void drawGui(ofEventArgs & args);
 
 		void exposureChanged(int & val);
 		void playingChanged(bool & val);
@@ -37,6 +39,8 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<float> threshold;
 		vector<ofParameter<bool>> folders;
 
+		ofFbo buff;
+
 		ofParameterGroup foldersGroup;
 
 		float playDuration;
@@ -46,8 +50,6 @@ class ofApp : public ofxDiderotApp{
 		float timeOfLastStep;
 
 		int numFiles;
-
-		bool drawGui;
 
 		float fps;
 

@@ -9,6 +9,18 @@ void ofApp::setup(){
 
 	ofxDiderotApp::setup();
 
+	numFiles = imagePaths.size();
+	fps = numFiles / exposure;
+
+	ofSetBackgroundAuto(false);
+
+	timeOfLastStep = ofGetElapsedTimef();
+
+	buff.allocate(ofGetWidth(), ofGetHeight());
+}
+
+//--------------------------------------------------------------
+void ofApp::setupGui() {
 	string settingsPath = "settings/settings.xml";
 	gui.setup("gui", settingsPath);
 	gui.add(exposure.set("Exposure (s)", 30, 1, 600));
@@ -38,14 +50,6 @@ void ofApp::setup(){
 	playing.addListener(this, &ofApp::playingChanged);
 	ofAddListener(foldersGroup.parameterChangedE(), this, &ofApp::onFolderChanged);
 
-	numFiles = imagePaths.size();
-	fps = numFiles / exposure;
-
-	ofSetBackgroundAuto(false);
-
-	drawGui = true;
-
-	timeOfLastStep = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
@@ -69,6 +73,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	buff.begin();
 	if (negative)
 		ofSetColor(0);
 	else
@@ -82,37 +87,37 @@ void ofApp::draw(){
 		ofRotateZ(90);
 		ofTranslate(-ofGetWidth() / 2, -ofGetHeight() / 2);
 	}
-	//if (negative) {
-		negativeEffect.begin();
-		negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
-		negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
-		negativeEffect.setUniform1f("scale", scale);
-		negativeEffect.setUniform1f("thresh", threshold);
-		ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
-		ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-		//image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-		negativeEffect.end();
-	//}
-	//else {
-		//ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
-		//image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-	//}
+	negativeEffect.begin();
+	negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
+	negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
+	negativeEffect.setUniform1f("scale", scale);
+	negativeEffect.setUniform1f("thresh", threshold);
+	ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
+	ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
+	negativeEffect.end();
 	ofPopMatrix();
+	buff.end();
+}
 
-	if (drawGui) {
-		gui.draw();
-		ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 100);
-		int y = 20;
-		int x = gui.getPosition().x + gui.getWidth() + 10;
-		ofDrawBitmapStringHighlight("FPS: " + ofToString(fps), x, y);
-		y += 20;
-		ofDrawBitmapStringHighlight("Num Files: " + ofToString(numFiles), x, y);
-		y += 20;
-		ofDrawBitmapStringHighlight("Play Duration: " + ofToString(playDuration), x, y);
-		y += 20;
-		ofDrawBitmapStringHighlight("Time Between Swaps: " + ofToString((1.0 / fps * 1000.0)), x, y);
-		y += 20;
-	}
+//--------------------------------------------------------------
+void ofApp::drawGui(ofEventArgs & args) {
+	buff.draw(0, 0);
+	gui.draw();
+	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 100);
+	int y = 20;
+	int x = gui.getPosition().x + gui.getWidth() + 10;
+	ofDrawBitmapStringHighlight("FPS: " + ofToString(fps), x, y);
+	y += 20;
+	ofDrawBitmapStringHighlight("Num Files: " + ofToString(numFiles), x, y);
+	y += 20;
+	ofDrawBitmapStringHighlight("Play Duration: " + ofToString(playDuration), x, y);
+	y += 20;
+	ofDrawBitmapStringHighlight("Time Between Swaps: " + ofToString((1.0 / fps * 1000.0)), x, y);
+	y += 20;
+
+	ofPushMatrix();
+	//ofScale(0.5, 0.5);
+	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
@@ -125,13 +130,7 @@ void ofApp::playingChanged(bool & val) {
 	index = 0;
 	percent = 0;
 	if (val) {
-		ofHideCursor();
 		playDuration = 0;
-		drawGui = false;
-	}
-	else {
-		ofShowCursor();
-		drawGui = true;
 	}
 }
 
@@ -156,7 +155,6 @@ void ofApp::onFolderChanged(ofAbstractParameter &p) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	if (key == 'g') {
-		drawGui = !drawGui;
 		ofShowCursor();
 	}
 	if (key == 'f') {
@@ -202,7 +200,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-	//buffer.allocate(w, h);
+	buff.allocate(w, h);
 }
 
 //--------------------------------------------------------------
