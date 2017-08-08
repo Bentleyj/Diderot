@@ -76,7 +76,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	buff.begin();
 	if (negative)
 		ofSetColor(0);
 	else
@@ -99,13 +98,15 @@ void ofApp::draw(){
 	ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 	negativeEffect.end();
 	ofPopMatrix();
-	buff.end();
-    buff.draw(0, 0);
 }
 
 //--------------------------------------------------------------
 void ofApp::drawGui(ofEventArgs & args) {
-	buff.draw(0, 0);
+	ofPushStyle();
+	ofPushMatrix();
+	draw();
+	ofPopMatrix();
+	ofPopStyle();
 	gui.draw();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 100);
 	int y = 20;
@@ -166,6 +167,11 @@ void ofApp::keyPressed(int key){
 	}
 	ofxDiderotApp::keyPressed(key);
 }
+
+void ofApp::keyPressed(ofKeyEventArgs & args) {
+	ofxDiderotApp::keyPressed(args.key);
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){

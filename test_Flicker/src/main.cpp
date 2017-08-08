@@ -21,8 +21,7 @@ int main( ){
 	shared_ptr<ofApp> mainApp(new ofApp);
 	mainApp->setupGui();
 	ofAddListener(guiWindow->events().draw, mainApp.get(), &ofApp::drawGui);
-	//auto mainApp = make_shared<ofApp>();
-
+	ofAddListener(guiWindow->events().keyPressed, mainApp.get(), &ofApp::keyPressed);
 	//ofSetupOpenGL(1024,768,OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app
