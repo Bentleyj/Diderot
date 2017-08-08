@@ -18,6 +18,7 @@ class ofApp : public ofxDiderotApp{
 		void onFolderChanged(ofAbstractParameter &p);
 
 		void keyPressed(int key);
+		void keyPressed(ofKeyEventArgs & args);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
 		void mouseDragged(int x, int y, int button);
