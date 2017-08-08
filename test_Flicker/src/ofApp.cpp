@@ -18,6 +18,8 @@ void ofApp::setup(){
 	timeOfLastStep = ofGetElapsedTimef();
 
 	buff.allocate(ofGetWidth(), ofGetHeight());
+    
+    index = 0;
 }
 
 //--------------------------------------------------------------
