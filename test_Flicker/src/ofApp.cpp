@@ -13,27 +13,34 @@ void ofApp::setup(){
 	fps = numFiles / exposure;
 
 	ofSetBackgroundAuto(false);
-    ofSetVerticalSync(false);
 
 	timeOfLastStep = ofGetElapsedTimef();
 
 	buff.allocate(ofGetWidth(), ofGetHeight());
     
     index = 0;
+    
+    ofSetVerticalSync(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::setupGui() {
-	string settingsPath = "settings/settings.xml";
+	string settingsPath = "settings.xml";
 	gui.setup("gui", settingsPath);
-	gui.add(exposure.set("Exposure (s)", 30, 1, 600));
+	gui.add(exposure.set("Exposure (s)", 300, 1, 600));
 	gui.add(playing.set("Playing", false));
 	gui.add(percent.set("Percent", 0, 0, 100));
 	gui.add(negative.set("Negative", false));
-	gui.add(scale.set("Scale", 1, 0.5, 10.0));
+	gui.add(scale.set("Scale", 1.26, 0.5, 10.0));
 	gui.add(rotate.set("Rotate 90", false));
-	gui.add(thresholdOn.set("ThreshOn", false));
-	gui.add(threshold.set("Threshold", 0.5, 0.0, 1.0));
+	gui.add(fullscreen.set("Fullscreen", false));
+	gui.add(threshold.set("Threshold", 0.0, 0.0, 1.0));
+    gui.add(contrast.set("Contrast", 1.0, 0.0, 20.0));
+    gui.add(tint.set("Tint", ofColor(255, 205, 170)));
+    // Do a custom folder
+    ofParameter<bool> p;
+    p.set("Custom/", false);
+    foldersGroup.add(p);
 	// Do the Supplements
 	for (int i = 1; i < 6; i++) {
 		ofParameter<bool> p;
@@ -46,30 +53,31 @@ void ofApp::setupGui() {
 		p.set("V" + ofToString(i) + "/", false);
 		foldersGroup.add(p);
 	}
+    
 	gui.add(foldersGroup);
 	gui.loadFromFile(settingsPath);
 
 	exposure.addListener(this, &ofApp::exposureChanged);
 	playing.addListener(this, &ofApp::playingChanged);
 	ofAddListener(foldersGroup.parameterChangedE(), this, &ofApp::onFolderChanged);
+    fullscreen.addListener(this, &ofApp::fullscreenChanged);
     
     ofSetVerticalSync(false);
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	if (playing) {
 		playDuration += ofGetLastFrameTime();
-		if (index >= numFiles - 1) {
+        percent = ofMap(playDuration, 0, (numFiles)/fps, 0, percent.getMax());
+		if (index == numFiles - 1) {
 			playing = false;
 			player.play();
-		}
-		if (playDuration - timeOfLastStep >= (1.0 / fps)) {
+		} else if (playDuration - timeOfLastStep >= (1.0 / fps)) {
 			stepRight();
 			timeOfLastStep = playDuration;
-			percent = ofMap(index, 0, numFiles, 0, percent.getMax());
 		}
+        cout<<index<<endl;
 	}
 	else {
 		timeOfLastStep = 0;
@@ -81,7 +89,7 @@ void ofApp::draw(){
 	if (negative)
 		ofSetColor(0);
 	else
-		ofSetColor(255);
+		ofSetColor(tint.get()*convertColorToUniformRange(tint).w);
 
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	ofSetColor(255);
@@ -96,19 +104,17 @@ void ofApp::draw(){
 	negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
 	negativeEffect.setUniform1f("scale", scale);
 	negativeEffect.setUniform1f("thresh", threshold);
+    negativeEffect.setUniform4f("tint", convertColorToUniformRange(tint));
+    negativeEffect.setUniform1f("contrast", contrast);
 	ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
 	ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 	negativeEffect.end();
+   // image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
 	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
 void ofApp::drawGui(ofEventArgs & args) {
-	ofPushStyle();
-	ofPushMatrix();
-	draw();
-	ofPopMatrix();
-	ofPopStyle();
 	gui.draw();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 100);
 	int y = 20;
@@ -142,6 +148,22 @@ void ofApp::playingChanged(bool & val) {
 }
 
 //--------------------------------------------------------------
+void ofApp::fullscreenChanged(bool & val) {
+    ofToggleFullscreen();
+}
+
+//--------------------------------------------------------------
+ofVec4f ofApp::convertColorToUniformRange(ofColor col) {
+    float r = ofMap(col.r, 0, 255, 0, 1);
+    float g = ofMap(col.g, 0, 255, 0, 1);
+    float b = ofMap(col.b, 0, 255, 0, 1);
+    float a = ofMap(col.a, 0, 255, 0, 1);
+    
+    return ofVec4f(r, g, b, a);
+
+}
+
+//--------------------------------------------------------------
 void ofApp::onFolderChanged(ofAbstractParameter &p) {
 	string name = p.getName();
 	for (auto it = foldersGroup.begin(); it != foldersGroup.end(); it++) {
@@ -157,6 +179,7 @@ void ofApp::onFolderChanged(ofAbstractParameter &p) {
 	index = 0;
 	numFiles = imagePaths.size();
 	fps = (float)numFiles / (float)exposure;
+    resetToBeginning();
 }
 
 //--------------------------------------------------------------
@@ -171,6 +194,12 @@ void ofApp::keyPressed(int key){
 }
 
 void ofApp::keyPressed(ofKeyEventArgs & args) {
+    if (args.key == 'g') {
+        ofShowCursor();
+    }
+    if (args.key == 'f') {
+        ofToggleFullscreen();
+    }
 	ofxDiderotApp::keyPressed(args.key);
 }
 

@@ -15,6 +15,7 @@ class ofApp : public ofxDiderotApp{
 
 		void exposureChanged(int & val);
 		void playingChanged(bool & val);
+        void fullscreenChanged(bool & val);
 		void onFolderChanged(ofAbstractParameter &p);
 
 		void keyPressed(int key);
@@ -29,6 +30,8 @@ class ofApp : public ofxDiderotApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        ofVec4f convertColorToUniformRange(ofColor col);
 
 		ofParameter<int> exposure;
 		ofParameter<bool> playing;
@@ -36,8 +39,10 @@ class ofApp : public ofxDiderotApp{
 		ofParameter<bool> negative;
 		ofParameter<float> scale;
 		ofParameter<bool> rotate;
-		ofParameter<bool> thresholdOn;
+		ofParameter<bool> fullscreen;
 		ofParameter<float> threshold;
+        ofParameter<ofColor> tint;
+        ofParameter<float> contrast;
 		vector<ofParameter<bool>> folders;
 
 		ofFbo buff;

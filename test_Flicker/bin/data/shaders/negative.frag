@@ -6,6 +6,8 @@ uniform sampler2DRect diffuseTexture;
 uniform float scale;
 uniform float thresh;
 uniform float negative;
+uniform vec4 tint;
+uniform float contrast;
 
 varying vec2 texCoord;
 
@@ -26,6 +28,12 @@ void main() {
 			color = vec4(1.0, 1.0, 1.0, 1.0);
 		}
 	}
+
+	color = vec4(color.xyz * tint.xyz, 1.0);
+
+	color *= tint.a;
+
+	color.xyz *= ((color.xyz - 0.5f) * max(contrast, 0)) + 0.5f;
 
     gl_FragColor = color;
 }
