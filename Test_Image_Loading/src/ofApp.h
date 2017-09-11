@@ -42,10 +42,7 @@ class ofApp : public ofxDiderotApp{
         ofParameterGroup foldersGroup;
     
         int numFiles;
-        float playDuration;
         float fps;
         float spf;
-        float timeOfLastStep;
-        float lastFrameDiff;
 		
 };

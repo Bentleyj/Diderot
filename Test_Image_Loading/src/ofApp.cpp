@@ -11,14 +11,10 @@ void ofApp::setup(){
 void ofApp::update(){
     if(playing) {
         bool looped = false;
-        cout<<index<<endl;
         looped = stepRight();
-        cout<<index<<endl;
         if(looped) {
             playing = false;
         }
-    } else {
-        timeOfLastStep = 0;
     }
 }
 
@@ -86,7 +82,6 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::onPlayingChanged(bool & val) {
     percent = 0;
-    playDuration = 0;
     if(val) {
         ofSetFrameRate((float)fps);
     } else {
