@@ -49,15 +49,11 @@ class ofApp : public ofxDiderotApp{
 
 		ofParameterGroup foldersGroup;
 
-		float playDuration;
-
 		ofSoundPlayer player;
 
-		float timeOfLastStep;
-
-		int numFiles;
-
-		float fps;
-
 		ofShader negativeEffect;
+    
+        int numFiles;
+        float fps;
+        float spf;
 };

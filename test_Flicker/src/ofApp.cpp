@@ -14,8 +14,6 @@ void ofApp::setup(){
 
 	ofSetBackgroundAuto(false);
 
-	timeOfLastStep = ofGetElapsedTimef();
-
 	buff.allocate(ofGetWidth(), ofGetHeight());
     
     index = 0;
@@ -67,21 +65,13 @@ void ofApp::setupGui() {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	if (playing) {
-		playDuration += ofGetLastFrameTime();
-        percent = ofMap(playDuration, 0, (numFiles)/fps, 0, percent.getMax());
-		if (index == numFiles - 1) {
-			playing = false;
-			player.play();
-		} else if (playDuration - timeOfLastStep >= (1.0 / fps)) {
-			stepRight();
-			timeOfLastStep = playDuration;
-		}
-        cout<<index<<endl;
-	}
-	else {
-		timeOfLastStep = 0;
-	}
+    if(playing) {
+        bool looped = false;
+        looped = stepRight();
+        if(looped) {
+            playing = false;
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -123,8 +113,6 @@ void ofApp::drawGui(ofEventArgs & args) {
 	y += 20;
 	ofDrawBitmapStringHighlight("Num Files: " + ofToString(numFiles), x, y);
 	y += 20;
-	ofDrawBitmapStringHighlight("Play Duration: " + ofToString(playDuration), x, y);
-	y += 20;
 	ofDrawBitmapStringHighlight("Time Between Swaps: " + ofToString((1.0 / fps * 1000.0)), x, y);
 	y += 20;
 
@@ -135,16 +123,18 @@ void ofApp::drawGui(ofEventArgs & args) {
 
 //--------------------------------------------------------------
 void ofApp::exposureChanged(int & val) {
-	fps = (float)numFiles / (float)val; // This is frames per second
+    fps = (float)numFiles / (float)val; // This is frames per second
+    spf = (1.0 / fps);
 }
 
 //--------------------------------------------------------------
 void ofApp::playingChanged(bool & val) {
-	index = 0;
-	percent = 0;
-	if (val) {
-		playDuration = 0;
-	}
+    percent = 0;
+    if(val) {
+        ofSetFrameRate((float)fps);
+    } else {
+        ofSetFrameRate(60);
+    }
 }
 
 //--------------------------------------------------------------
@@ -165,21 +155,19 @@ ofVec4f ofApp::convertColorToUniformRange(ofColor col) {
 
 //--------------------------------------------------------------
 void ofApp::onFolderChanged(ofAbstractParameter &p) {
-	string name = p.getName();
-	for (auto it = foldersGroup.begin(); it != foldersGroup.end(); it++) {
-		if (it->get()->getName() != name) {
-			foldersGroup.getBool(it->get()->getName()).setWithoutEventNotifications(false);
-			//it->get()->setWithoutEventNotification(false);
-		}
-		else {
-			foldersGroup.getBool(it->get()->getName()).setWithoutEventNotifications(true);
-		}
-	}
-	loadImages(name);
-	index = 0;
-	numFiles = imagePaths.size();
-	fps = (float)numFiles / (float)exposure;
-    resetToBeginning();
+    string name = p.getName();
+    for (auto it = foldersGroup.begin(); it != foldersGroup.end(); it++) {
+        if (it->get()->getName() != name) {
+            foldersGroup.getBool(it->get()->getName()).setWithoutEventNotifications(false);
+            //it->get()->setWithoutEventNotification(false);
+        }
+        else {
+            foldersGroup.getBool(it->get()->getName()).setWithoutEventNotifications(true);
+        }
+    }
+    loadImages(name);
+    numFiles = imagePaths.size();
+    fps =  (float)numFiles / (float)exposure;
 }
 
 //--------------------------------------------------------------
