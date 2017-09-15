@@ -1,14 +1,14 @@
 <group>
-	<Exposure__s_>9</Exposure__s_>
+	<Exposure__s_>60</Exposure__s_>
 	<Playing>0</Playing>
 	<Percent>0</Percent>
 	<Negative>1</Negative>
-	<Scale>1.4025</Scale>
+	<Scale>1.07</Scale>
 	<Rotate_90>1</Rotate_90>
 	<Fullscreen>0</Fullscreen>
 	<Threshold>0</Threshold>
-	<Contrast>10</Contrast>
-	<Tint>255, 255, 255, 219</Tint>
+	<Contrast>5</Contrast>
+	<Tint>255, 255, 255, 255</Tint>
 	<group/>
 	<Custom_>1</Custom_>
 	<SUP1_>0</SUP1_>
