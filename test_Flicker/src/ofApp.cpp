@@ -70,6 +70,8 @@ void ofApp::update(){
         looped = stepRight();
         if(looped) {
             playing = false;
+            player.play();
+            ofSetFrameRate(60);
         }
     }
 }
@@ -130,6 +132,7 @@ void ofApp::exposureChanged(int & val) {
 //--------------------------------------------------------------
 void ofApp::playingChanged(bool & val) {
     percent = 0;
+    index = 0;
     if(val) {
         ofSetFrameRate((float)fps);
     } else {
