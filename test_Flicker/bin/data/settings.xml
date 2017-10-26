@@ -44,4 +44,21 @@
 	<V26_>0</V26_>
 	<V27_>0</V27_>
 	<V28_>0</V28_>
+<gui>
+		<Exposure__s_>21</Exposure__s_>
+		<Playing>0</Playing>
+		<Percent>0</Percent>
+		<Negative>0</Negative>
+		<Scale>1.26</Scale>
+		<Rotate_90>1</Rotate_90>
+		<Fullscreen>0</Fullscreen>
+		<Threshold>0</Threshold>
+		<Contrast>1</Contrast>
+		<Tint>255, 255, 255, 255</Tint>
+		<group>
+			<Custom_>0</Custom_>
+			<V1_>1</V1_>
+			<V2_>0</V2_>
+		</group>
+	</gui>
 </group>
