@@ -82,7 +82,7 @@ void ofApp::draw(){
 		ofSetColor(0);
 	else
 		ofSetColor(tint.get()*convertColorToUniformRange(tint).w);
-
+    ofSetColor(0);
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	ofSetColor(255);
 	ofPushMatrix();
