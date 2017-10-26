@@ -9,7 +9,7 @@
 // +++++++++++++++++
 
 string pad(string num) {
-	while (num.size() < 4) {
+	while (num.size() < 3) {
 		num = "0" + num;
 	}
 	return num;
@@ -100,15 +100,16 @@ string convertToRN(int index) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	baseURL = "http://artflsrv02.uchicago.edu/images/encyclopedie/V"; //1/ENC_1-1.jpeg";
-	ofLogToFile("ProgressSup.txt");
-	volumeIndex = 13;
+    //https://www.bl.uk/TreasuresImages/gutenberg/max/kl1/324_v.jpg
+	baseURL = "https://www.bl.uk/TreasuresImages/gutenberg/max/kl"; //1/ENC_1-1.jpeg";
+	ofLogToFile("Progress.txt");
+	volumeIndex = 1;
 	pageIndex = 1;
 	pad(ofToString(pageIndex));
 	bool downloading = true;
 	while (downloading) {
-		string URL = baseURL + ofToString(volumeIndex) + "/ENC_" + ofToString(volumeIndex) + "-T" + ofToString(pageIndex) + ".jpeg";
-		string path = "V" + ofToString(volumeIndex) + "/V" + ofToString(volumeIndex) + "PT" + ofToString(pageIndex) + ".jpeg";
+		string URL = baseURL + ofToString(volumeIndex) + "/" + pad(ofToString(pageIndex)) + "_v.jpg";
+		string path = "Gutenberg/V" + ofToString(volumeIndex) + "/V" + ofToString(volumeIndex) + "F" + ofToString(pageIndex) + "_v.jpg";
 		ofHttpResponse resp = loader.saveTo(URL, path);
 		pageIndex++;
 		if (resp.error != "OK") {
@@ -129,7 +130,7 @@ void ofApp::setup(){
 			cout << "File saved successfully to: " + path << endl;
 			ofLog() << "File saved successfully to: " + path;
 		}
-		if (volumeIndex > 13) {
+		if (volumeIndex > 2) {
 			downloading = false;
 			cout << "Download complete!" << endl;
 			ofLog() << "Download complete!";
