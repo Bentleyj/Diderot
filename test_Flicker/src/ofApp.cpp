@@ -40,13 +40,13 @@ void ofApp::setupGui() {
     p.set("Custom/", false);
     foldersGroup.add(p);
 	// Do the Supplements
-	for (int i = 1; i < 6; i++) {
-		ofParameter<bool> p;
-		p.set("SUP" + ofToString(i) + "/", false);
-		foldersGroup.add(p);
-	}
+//	for (int i = 1; i < 6; i++) {
+//		ofParameter<bool> p;
+//		p.set("SUP" + ofToString(i) + "/", false);
+//		foldersGroup.add(p);
+//	}
 	// Do the Volumes
-	for (int i = 1; i < 29; i++) {
+	for (int i = 1; i < 3; i++) {
 		ofParameter<bool> p;
 		p.set("V" + ofToString(i) + "/", false);
 		foldersGroup.add(p);
@@ -82,7 +82,7 @@ void ofApp::draw(){
 		ofSetColor(0);
 	else
 		ofSetColor(tint.get()*convertColorToUniformRange(tint).w);
-
+    ofSetColor(0);
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	ofSetColor(255);
 	ofPushMatrix();
