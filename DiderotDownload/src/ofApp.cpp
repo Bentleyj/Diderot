@@ -9,7 +9,7 @@
 // +++++++++++++++++
 
 string pad(string num) {
-	while (num.size() < 3) {
+	while (num.size() < 4) {
 		num = "0" + num;
 	}
 	return num;
@@ -100,16 +100,20 @@ string convertToRN(int index) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    //https://www.bl.uk/TreasuresImages/gutenberg/max/kl1/324_v.jpg
-	baseURL = "https://www.bl.uk/TreasuresImages/gutenberg/max/kl"; //1/ENC_1-1.jpeg";
+    //https://ia800207.us.archive.org/BookReader/BookReaderImages.php?zip=/22/items/oed01arch/oed01arch_jp2.tar&file=oed01arch_jp2/oed01arch_0025.jp2
+	//https://ia800203.us.archive.org/BookReader/BookReaderImages.php?zip=/2/items/oed04arch/oed04arch_jp2.tar&file=oed04arch_jp2/oed04arch_0133.jp2
+	//https://ia800204.us.archive.org/BookReader/BookReaderImages.php?zip=/10/items/oed03arch/oed03arch_jp2.tar&file=oed03arch_jp2/oed03arch_0647.jp2
+	//https://ia800203.us.archive.org/BookReader/BookReaderImages.php?zip=/30/items/oed02arch/oed02arch_jp2.zip&file=oed02arch_jp2/oed02arch_0363.jp2
+
+	baseURL = "https://ia800207.us.archive.org/BookReader/BookReaderImages.php?zip=/22/items/oed01arch/oed01arch_jp2.tar&file=oed01arch_jp2/oed01arch_"; //0025.jp2";
 	ofLogToFile("Progress.txt");
 	volumeIndex = 1;
 	pageIndex = 1;
 	pad(ofToString(pageIndex));
 	bool downloading = true;
 	while (downloading) {
-		string URL = baseURL + ofToString(volumeIndex) + "/" + pad(ofToString(pageIndex)) + "_v.jpg";
-		string path = "Gutenberg/V" + ofToString(volumeIndex) + "/V" + ofToString(volumeIndex) + "F" + ofToString(pageIndex) + "_v.jpg";
+		string URL = baseURL + pad(ofToString(pageIndex)) + ".jp2";
+		string path = "OED/AB/"+ pad(ofToString(pageIndex)) + ".jpg";
 		ofHttpResponse resp = loader.saveTo(URL, path);
 		pageIndex++;
 		if (resp.error != "OK") {
@@ -130,7 +134,7 @@ void ofApp::setup(){
 			cout << "File saved successfully to: " + path << endl;
 			ofLog() << "File saved successfully to: " + path;
 		}
-		if (volumeIndex > 2) {
+		if (volumeIndex > 1) {
 			downloading = false;
 			cout << "Download complete!" << endl;
 			ofLog() << "Download complete!";

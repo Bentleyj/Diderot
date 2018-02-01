@@ -40,13 +40,13 @@ void ofApp::setupGui() {
     p.set("Custom/", false);
     foldersGroup.add(p);
 	// Do the Supplements
-	for (int i = 1; i < 6; i++) {
-		ofParameter<bool> p;
-		p.set("SUP" + ofToString(i) + "/", false);
-		foldersGroup.add(p);
-	}
+	//for (int i = 1; i < 6; i++) {
+	//	ofParameter<bool> p;
+	//	p.set("SUP" + ofToString(i) + "/", false);
+	//	foldersGroup.add(p);
+	//}
 	// Do the Volumes
-	for (int i = 1; i < 29; i++) {
+	for (int i = 1; i < 2; i++) {
 		ofParameter<bool> p;
 		p.set("V" + ofToString(i) + "/", false);
 		foldersGroup.add(p);

@@ -1,6 +1,7 @@
 # project specific
 DiderotData/
 GutenbergData/
+OED/
 
 # ignore core oF files that we dont want to track
 libs/*
