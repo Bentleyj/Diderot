@@ -105,15 +105,15 @@ void ofApp::setup(){
 	//https://ia800204.us.archive.org/BookReader/BookReaderImages.php?zip=/10/items/oed03arch/oed03arch_jp2.tar&file=oed03arch_jp2/oed03arch_0647.jp2
 	//https://ia800203.us.archive.org/BookReader/BookReaderImages.php?zip=/30/items/oed02arch/oed02arch_jp2.zip&file=oed02arch_jp2/oed02arch_0363.jp2
 
-	baseURL = "https://ia800207.us.archive.org/BookReader/BookReaderImages.php?zip=/22/items/oed01arch/oed01arch_jp2.tar&file=oed01arch_jp2/oed01arch_"; //0025.jp2";
+	baseURL = "https://ia800203.us.archive.org/BookReader/BookReaderImages.php?zip=/2/items/oed04arch/oed04arch_jp2.tar&file=oed04arch_jp2/oed04arch_"; //0025.jp2";
 	ofLogToFile("Progress.txt");
 	volumeIndex = 1;
-	pageIndex = 1;
+	pageIndex = 216;
 	pad(ofToString(pageIndex));
 	bool downloading = true;
 	while (downloading) {
 		string URL = baseURL + pad(ofToString(pageIndex)) + ".jp2";
-		string path = "OED/AB/"+ pad(ofToString(pageIndex)) + ".jpg";
+		string path = "OED/FG/"+ pad(ofToString(pageIndex)) + ".jpg";
 		ofHttpResponse resp = loader.saveTo(URL, path);
 		pageIndex++;
 		if (resp.error != "OK") {

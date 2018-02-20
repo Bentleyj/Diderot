@@ -29,16 +29,48 @@ void ofApp::setupGui() {
 	gui.add(playing.set("Playing", false));
 	gui.add(percent.set("Percent", 0, 0, 100));
 	gui.add(negative.set("Negative", false));
-	gui.add(scale.set("Scale", 1.26, 0.5, 10.0));
+	gui.add(scale.set("Scale", 1.26, 0.1, 10.0));
 	gui.add(rotate.set("Rotate 90", false));
 	gui.add(fullscreen.set("Fullscreen", false));
 	gui.add(threshold.set("Threshold", 0.0, 0.0, 1.0));
     gui.add(contrast.set("Contrast", 1.0, 0.0, 20.0));
     gui.add(tint.set("Tint", ofColor(255, 205, 170)));
     // Do a custom folder
-    ofParameter<bool> p;
-    p.set("Custom/", false);
-    foldersGroup.add(p);
+    ofParameter<bool> p1;
+    p1.set("D-V1", false);
+    foldersGroup.add(p1);
+    ofParameter<bool> p2;
+    p2.set("G-V1", false);
+    foldersGroup.add(p2);
+    ofParameter<bool> p3;
+    p3.set("G-V2", false);
+    foldersGroup.add(p3);
+    ofParameter<bool> p4;
+    p4.set("Wiki", false);
+    foldersGroup.add(p4);
+    ofParameter<bool> p5;
+    p5.set("AB", false);
+    foldersGroup.add(p5);
+    ofParameter<bool> p6;
+    p6.set("ABPNG", false);
+    foldersGroup.add(p6);
+    
+    ofParameter<bool> p7;
+    p7.set("OEDVol1", false);
+    foldersGroup.add(p7);
+    
+    ofParameter<bool> p8;
+    p8.set("OEDVol2", false);
+    foldersGroup.add(p8);
+    
+    ofParameter<bool> p9;
+    p9.set("OEDVol5", false);
+    foldersGroup.add(p9);
+    
+    ofParameter<bool> p10;
+    p10.set("OEDVol6", false);
+    foldersGroup.add(p10);
+
 	// Do the Supplements
 	//for (int i = 1; i < 6; i++) {
 	//	ofParameter<bool> p;
@@ -47,9 +79,9 @@ void ofApp::setupGui() {
 	//}
 	// Do the Volumes
 	for (int i = 1; i < 2; i++) {
-		ofParameter<bool> p;
-		p.set("V" + ofToString(i) + "/", false);
-		foldersGroup.add(p);
+		//ofParameter<bool> p;
+		//p.set("V" + ofToString(i) + "/", false);
+		//foldersGroup.add(p);
 	}
     
 	gui.add(foldersGroup);
