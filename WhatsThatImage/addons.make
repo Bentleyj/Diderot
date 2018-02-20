@@ -1,0 +1,4 @@
+ofxDiderot
+ofxGui
+ofxMSATensorFlow
+ofxNestedFileLoader

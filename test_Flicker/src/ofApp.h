@@ -44,6 +44,10 @@ class ofApp : public ofxDiderotApp{
         ofParameter<ofColor> tint;
         ofParameter<float> contrast;
 		vector<ofParameter<bool>> folders;
+    
+        int index = 0;
+    
+        ofImage test;
 
 		ofFbo buff;
 

@@ -2,7 +2,7 @@
 	<Exposure__s_>60</Exposure__s_>
 	<Playing>0</Playing>
 	<Percent>0</Percent>
-	<Negative>1</Negative>
+	<Negative>0</Negative>
 	<Scale>1.07</Scale>
 	<Rotate_90>1</Rotate_90>
 	<Fullscreen>0</Fullscreen>
@@ -62,4 +62,7 @@
 			<V1_>0</V1_>
 		</group>
 	</gui>
+<OEDVol1>0</OEDVol1>
+	<OEDVol2>0</OEDVol2>
+	<OEDVol5>0</OEDVol5>
 </group>

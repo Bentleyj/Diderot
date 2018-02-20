@@ -19,6 +19,9 @@ void ofApp::setup(){
     index = 0;
     
     ofSetVerticalSync(true);
+    
+    test.load("GutenbergData/OEDVol1/intro_0011.jpg");
+    
 }
 
 //--------------------------------------------------------------
@@ -35,41 +38,43 @@ void ofApp::setupGui() {
 	gui.add(threshold.set("Threshold", 0.0, 0.0, 1.0));
     gui.add(contrast.set("Contrast", 1.0, 0.0, 20.0));
     gui.add(tint.set("Tint", ofColor(255, 205, 170)));
+    ofxNestedFileLoader loader;
+    vector<string> paths = loader.load("GutenbergData");
+    vector<string> folders;
+    for(int i = 0; i < paths.size(); i++) {
+        string folder = ofSplitString(paths[i], "/")[1];
+        bool found = false;
+        for(int j = 0; j < folders.size(); j++) {
+            if(folder == folders[j]) {
+                found = true;
+            }
+        }
+        if(!found) {
+            folders.push_back(folder);
+        }
+    }
+    
+    for(int i = 0; i < folders.size(); i++) {
+        ofParameter<bool> newFolder;
+        newFolder.set(folders[i], false);
+        foldersGroup.add(newFolder);
+    }
     // Do a custom folder
-    ofParameter<bool> p1;
-    p1.set("D-V1", false);
-    foldersGroup.add(p1);
-    ofParameter<bool> p2;
-    p2.set("G-V1", false);
-    foldersGroup.add(p2);
-    ofParameter<bool> p3;
-    p3.set("G-V2", false);
-    foldersGroup.add(p3);
-    ofParameter<bool> p4;
-    p4.set("Wiki", false);
-    foldersGroup.add(p4);
-    ofParameter<bool> p5;
-    p5.set("AB", false);
-    foldersGroup.add(p5);
-    ofParameter<bool> p6;
-    p6.set("ABPNG", false);
-    foldersGroup.add(p6);
-    
-    ofParameter<bool> p7;
-    p7.set("OEDVol1", false);
-    foldersGroup.add(p7);
-    
-    ofParameter<bool> p8;
-    p8.set("OEDVol2", false);
-    foldersGroup.add(p8);
-    
-    ofParameter<bool> p9;
-    p9.set("OEDVol5", false);
-    foldersGroup.add(p9);
-    
-    ofParameter<bool> p10;
-    p10.set("OEDVol6", false);
-    foldersGroup.add(p10);
+//    ofParameter<bool> p7;
+//    p7.set("OEDVol1", false);
+//    foldersGroup.add(p7);
+//
+//    ofParameter<bool> p8;
+//    p8.set("OEDVol2", false);
+//    foldersGroup.add(p8);
+//
+//    ofParameter<bool> p9;
+//    p9.set("OEDVol5", false);
+//    foldersGroup.add(p9);
+//
+//    ofParameter<bool> p10;
+//    p10.set("OEDVol6", false);
+//    foldersGroup.add(p10);
 
 	// Do the Supplements
 	//for (int i = 1; i < 6; i++) {
@@ -99,7 +104,7 @@ void ofApp::setupGui() {
 void ofApp::update(){
     if(playing) {
         bool looped = false;
-        looped = stepRight();
+        looped = stepRight(&test);
         if(looped) {
             playing = false;
             player.play();
@@ -114,27 +119,32 @@ void ofApp::draw(){
 		ofSetColor(0);
 	else
 		ofSetColor(tint.get()*convertColorToUniformRange(tint).w);
-
-	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-	ofSetColor(255);
-	ofPushMatrix();
-	if (rotate) {
-		ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
-		ofRotateZ(90);
-		ofTranslate(-ofGetWidth() / 2, -ofGetHeight() / 2);
-	}
-	negativeEffect.begin();
-	negativeEffect.setUniformTexture("diffuseTexture", image.getTexture(), 0);
-	negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
-	negativeEffect.setUniform1f("scale", scale);
-	negativeEffect.setUniform1f("thresh", threshold);
+//
+//
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    ofSetColor(255);
+    ofPushMatrix();
+    if (rotate) {
+        ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2);
+        ofRotateZ(90);
+        ofTranslate(-ofGetWidth() / 2, -ofGetHeight() / 2);
+    }
+    negativeEffect.begin();
+    negativeEffect.setUniformTexture("diffuseTexture", test.getTexture(), 0);
+    negativeEffect.setUniform1f("negative", (negative) ? 1 : 0);
+    negativeEffect.setUniform1f("scale", scale);
+    negativeEffect.setUniform1f("thresh", threshold);
     negativeEffect.setUniform4f("tint", convertColorToUniformRange(tint));
     negativeEffect.setUniform1f("contrast", contrast);
-	ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
-	ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-	negativeEffect.end();
+    ofTranslate(ofGetWidth() / 2 - image.getWidth() / 2 * scale, ofGetHeight() / 2 - image.getHeight() / 2 * scale);
+    ofDrawRectangle(0, 0, image.getWidth() * scale, image.getHeight() * scale);
+    negativeEffect.end();
    // image.draw(0, 0, image.getWidth() * scale, image.getHeight() * scale);
-	ofPopMatrix();
+    ofPopMatrix();
+    
+//    ofSetColor(255, 0, 0);
+//    ofDrawRectangle(0, 0, 500, 500);
+//    test.draw(0, 0, 100, 100);
 }
 
 //--------------------------------------------------------------
